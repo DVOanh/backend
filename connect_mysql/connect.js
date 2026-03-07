@@ -1,9 +1,10 @@
 import mysql2 from 'mysql2/promise';
 const pool = mysql2.createPool({
-    host: 'localhost',
+    host: 'shinkansen.proxy.rlwy.net',
+    port: 54972,
     user: 'root',
-    password: 'Dovanoanh@2004!!!',
-    database: 'mobile_store_db',
+    password: 'omIJbfMboXxzGNANDnkwImQSCjGgOwNz',
+    database: 'railway',
 
     waitForConnections: true,
     connectionLimit: 10,
