@@ -4,7 +4,7 @@ const pool = mysql2.createPool({
     port: 54972,
     user: 'root',
     password: 'omIJbfMboXxzGNANDnkwImQSCjGgOwNz',
-    database: 'mobile_store_db',
+    database: 'railway',
 
     waitForConnections: true,
     connectionLimit: 10,
