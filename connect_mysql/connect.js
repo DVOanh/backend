@@ -1,10 +1,10 @@
 import mysql2 from 'mysql2/promise';
 const pool = mysql2.createPool({
-    host: 'shinkansen.proxy.rlwy.net',
-    port: 54972,
-    user: 'root',
-    password: 'omIJbfMboXxzGNANDnkwImQSCjGgOwNz',
-    database: 'railway',
+    host: process.env.MYSQLHOST,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE,
+    port: process.env.MYSQLPORT,
 
     waitForConnections: true,
     connectionLimit: 10,
