@@ -9,6 +9,7 @@ router.get('/', async (req, res)=>{
         return res.json(rows);
     }
     catch(error){
+        console.error(error);
         return res.json({message: 'Loi server'});
     }
 });
