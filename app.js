@@ -26,6 +26,10 @@ app.use('/brand', brand);
 app.get("/", (req, res)=>{
     res.send("API OK");
 });
+app.get("/debug", async (req,res)=>{
+    const [rows] = await pool.query("SELECT DATABASE()");
+    res.json(rows);
+});
 
 const PORT = process.env.PORT || 3000
 
