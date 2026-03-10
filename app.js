@@ -24,7 +24,9 @@ app.use('/order', orderRouter);
 app.use('/categories', categories);
 app.use('/brand', brand);
 
+const PORT = process.env.PORT || 3000
+
 app.use('/admin', adminRouter);
-app.listen(3000, ()=>{
-    console.log('------------------------------------\nĐang chạy server ở PORT 3000\n');
+app.listen(PORT, ()=>{
+    console.log(`------------------------------------\nĐang chạy server ở PORT ${PORT}\n`);
 });
