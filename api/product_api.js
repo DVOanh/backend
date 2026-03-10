@@ -3,7 +3,7 @@ const router = express.Router();
 import pool from '../connect_mysql/connect.js';
 
 router.get('/', async (req, res) => {
-    const sql = 'SELECT p.product_id, p.product_name, p.image_url, MIN(v.price) as min_price FROM products p JOIN product_variant v ON v.product_id = p.product_id GROUP BY p.product_id';
+    const sql = 'SELECT p.product_id, p.product_name, p.image_url, MIN(v.price) as min_price FROM products p JOIN product_variant v ON v.product_id = p.product_id GROUP BY p.product_id, p.product_name, p.image_url';
     const [rows] = await pool.query(sql);
     return res.json(rows);
 });
