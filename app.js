@@ -23,6 +23,9 @@ app.use('/cart', cartRouter);
 app.use('/order', orderRouter);
 app.use('/categories', categories);
 app.use('/brand', brand);
+app.get("/", (req, res)=>{
+    res.send("API OK");
+});
 
 const PORT = process.env.PORT || 3000
 
