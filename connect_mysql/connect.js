@@ -1,10 +1,10 @@
 import mysql2 from 'mysql2/promise';
 const pool = mysql2.createPool({
-    host: "centerbeam.proxy.rlwy.net",
+    host: process.env.MYSQLHOST,
     user: process.env.MYSQLUSER,
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE,
-    port: 44485,
+    port: Number(process.env.MYSQLPORT),
 
 
     waitForConnections: true,
