@@ -33,6 +33,7 @@ app.use('/admin', adminRouter);
 console.log("HOST:", process.env.MYSQLHOST);
 console.log("USER:", process.env.MYSQLUSER);
 console.log("DB:", process.env.MYSQLDATABASE);
+console.log("POST:", process.env.MYSQLPORT);
 app.listen(PORT, ()=>{
     console.log(`------------------------------------\nĐang chạy server ở PORT ${PORT}\n`);
 });
