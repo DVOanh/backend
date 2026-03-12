@@ -6,7 +6,7 @@ const pool = mysql2.createPool(
     // database: process.env.MYSQLDATABASE,
     // port: process.env.MYSQLPORT,
 
-    process.env.MYSQL_URL,
+    process.env.MYSQL_URL
 );
 // console.log('Ket noi bang pool');
 // TEST CONNECTION
