@@ -1,17 +1,13 @@
 import mysql2 from 'mysql2/promise';
-const pool = mysql2.createPool({
+const pool = mysql2.createPool(
     // host: process.env.MYSQLHOST,
     // user: process.env.MYSQLUSER,
     // password: process.env.MYSQLPASSWORD,
     // database: process.env.MYSQLDATABASE,
     // port: process.env.MYSQLPORT,
 
-    uri: process.env.MYSQL_URL,
-
-    waitForConnections: true,
-    connectionLimit: 10,
-    charset: 'utf8mb4'
-});
+    process.env.MYSQL_URL,
+);
 // console.log('Ket noi bang pool');
 // TEST CONNECTION
 (async () => {
