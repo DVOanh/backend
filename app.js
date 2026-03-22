@@ -11,6 +11,7 @@ import orderStatusRouter from './api/order_status.js';
 import adminRouter from './api/admin.js';
 import categories from './api/categories.js';
 import brand from './api/brand.js';
+import danhmuc from "./api/danhmuc_api.js";
 import cors from 'cors';
 app.use(cors());
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use('/cart', cartRouter);
 app.use('/order', orderRouter);
 app.use('/categories', categories);
 app.use('/brand', brand);
+app.get('/danhmuc', danhmuc);
 app.get("/", (req, res)=>{
     res.send("API OK");
 });
