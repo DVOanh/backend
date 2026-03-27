@@ -13,6 +13,7 @@ import categories from './api/categories.js';
 import brand from './api/brand.js';
 import danhmuc from "./api/danhmuc_api.js";
 import cors from 'cors';
+import mota from './api/product_description.js';
 app.use(cors());
 app.use(express.json());
 app.use('/order_status', orderStatusRouter);
@@ -25,6 +26,7 @@ app.use('/order', orderRouter);
 app.use('/categories', categories);
 app.use('/brand', brand);
 app.get('/danhmuc', danhmuc);
+app.use('/motasp', mota);
 app.get("/", (req, res)=>{
     res.send("API OK");
 });
