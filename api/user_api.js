@@ -25,7 +25,7 @@ router.post('/login', async (req, res) => {
             role: users.role
         },
         "SECRE_KEY",
-        { expiresIn: "1d" }
+        { expiresIn: "3d" }
     )
 
     res.json(
