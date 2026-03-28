@@ -1,7 +1,6 @@
 import pool from '../connect_mysql/connect.js';
 import express from 'express';
 import jwt from 'jsonwebtoken';
-
 import bcrypt from 'bcrypt';
 const router = express.Router();
 
