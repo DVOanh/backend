@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/', async (req, res)=>{
     try{
-        const sql = 'SELECT * FROM order_status join orders on order_items.order_id = orders.order_id ORDER BY status_id ASC';
+        const sql = 'SELECT * FROM order_status ORDER BY status_id ASC';
         const [rows] = await pool.query(sql);
         return res.json(rows);
     }
