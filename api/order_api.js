@@ -1,7 +1,7 @@
 import pool from '../connect_mysql/connect.js';
 import express from 'express';
 const router = express.Router();
-import jwt from 'jsonwebtoken';
+import jwt, { verify } from 'jsonwebtoken';
 
 router.get('/', async(req, res)=>{
     const {status_id} = req.query;
@@ -60,8 +60,32 @@ router.post('/checkout', async (req, res) => {
     }
 });
 
-// router.put('/huydon', async (req, res)=>{
-//     const {user_id, order_id}
-// })
+router.put('/huydon', async (req, res)=>{
+    const connection = await pool.getConnection();
+    const authHeader = req.headers.authorization;
+    if(!authHeader){
+        res.status(400).json({message: "Chua dang nhap"});
+    }
+    try{
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.verify(token, 'SECRE_KEY');
+        const user_id = decoded.id;
+        await connection.beginTransaction();
+        const {order_item_id, order_id, soluong_sp, variant_id} = req.body;
+        const sqlhuydon = "UPDATE orders o join order_items oi ON o.order_id = oi.order_id set o.status_id = 10 WHERE user_id = ? and oi.order_id = ? and order_item_id = ?";
+        const sqlsuaslkho = "UPDATE product_variant set stock = stock + ? WHERE id = ?"
+        await connection.query(sqlhuydon, [user_id, order_id, order_item_id]);
+        await connection.query(sqlsuaslkho, [soluong_sp, variant_id])
+        await connection.commit();
+        res.status(200).json({message: "Huỷ đơn thành công"});
+    }
+    catch(error){
+        await connection.rollback();
+        res.status(500).json({message: "Lối hủy đơn"});
+    }
+    finally{
+        connection.release();
+    }
+})
 
 export default router;
