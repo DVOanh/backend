@@ -1,7 +1,7 @@
 import pool from '../connect_mysql/connect.js';
 import express from 'express';
 const router = express.Router();
-import jwt, { verify } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 router.get('/', async(req, res)=>{
     const {status_id} = req.query;
@@ -64,7 +64,7 @@ router.put('/huydon', async (req, res)=>{
     const connection = await pool.getConnection();
     const authHeader = req.headers.authorization;
     if(!authHeader){
-        res.status(400).json({message: "Chua dang nhap"});
+        return res.status(400).json({message: "Chua dang nhap"});
     }
     try{
         const token = authHeader.split(" ")[1];
