@@ -32,7 +32,7 @@ router.get('/', async(req, res)=>{
 router.post('/checkout', async (req, res) => {
     const { user_id, variant_id, quantity, price, total, hoten, phone, address, pttt, ghichu } = req.body;
     const connection = await pool.getConnection();
-    const orderCode = 'LS' + Math.floor(100000000 + Math.random() * 900000000);
+    const orderCode = '#LS' + Math.floor(100000000 + Math.random() * 900000000);
     try {
         await connection.beginTransaction();
         const [order] = await connection.query('INSERT INTO orders(user_id, tongtien, hoten, sdt, diachi, ghichu, phuongthuc_thanhtoan, order_code) values (?, ?, ?, ?, ?, ?, ?, ?)',

@@ -1,11 +1,13 @@
 import mysql2 from 'mysql2/promise';
 const pool = mysql2.createPool({
-    host: process.env.MYSQLHOST,
-    user: process.env.MYSQLUSER,
-    password: process.env.MYSQLPASSWORD,
-    database: process.env.MYSQLDATABASE,
-    port: Number(process.env.MYSQLPORT),
-
+    host: "gateway01.ap-southeast-1.prod.aws.tidbcloud.com",
+    port: 4000,
+    user: "MDf71m7cYLSHrK5.root",
+    password: "nbtPU1HLFtr7r82K",
+    database: "mobile_store_db",
+    ssl: {
+        rejectUnauthorized: true
+    },
 
     waitForConnections: true,
     connectionLimit: 10,

@@ -5,7 +5,7 @@ const router = express.Router();
 router.get('/:product_id', async (req, res)=>{
     try{
         const {product_id} = req.params;
-        const sql = "SELECT * FROM product_descriptions WHERE product_id = ?";
+        const sql = "SELECT * FROM mo_ta_san_pham  WHERE product_id = ?";
         const [rows] = await pool.query(sql, [product_id]);
         return res.status(200).json(rows);
     }
