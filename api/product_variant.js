@@ -18,14 +18,14 @@ router.post('/', async (req, res)=>{
 router.get('/:product_id', async (req, res)=>{
     try{
         const {product_id} = req.params;
-        const sql = 'select id, storage, ram, color, price from product_variant where product_id = ?';
-        const [rows] = await pool.query(sql, product_id);
+        const sql = 'select id, storage, ram, price from product_variant where product_id = ?';
+        const [rows] = await pool.query(sql, [product_id]);
         return res.status(200).json(rows);
     }   
     catch(error){
         return res.status(400).json("Loi server");
     }
-})
+});
 
 
 export default router;
