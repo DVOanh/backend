@@ -24,7 +24,7 @@ JOIN (
     SELECT product_id, SUM(sold) AS total_sold
     FROM product_variant
     GROUP BY product_id
-) s ON s.product_id = p.product_id;`;
+) s ON s.product_id = p.product_id ORDER BY product_id ASC;`;
     const [rows] = await pool.query(sql);
     return res.json(rows);
 });
