@@ -35,4 +35,24 @@ router.post('/addcart', async (req, res) => {
 
 });
 
+router.delete('/delete', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    if(!authHeader){
+        return res.status(401).json({message: "Bạn chưa đăng nhập"});
+    }
+    try{
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.verify(token, "SECRE_KEY");
+        const user_id = decoded.id;
+        const {cart_id} = req.body;
+        const sql = "DELETE FROM cart WHERE cart_id = ? AND user_id = ?";
+        const [rows] = await pool.query(sql, [cart_id, user_id]);
+        return res.status(200).json({message: "Xóa giỏ hàng thành công"});
+    }
+    catch(err){
+        console.error(err);
+        return res.status(500).json({ message: "Lỗi server" });
+    }
+});
+
 export default router;
