@@ -76,6 +76,23 @@ router.put('/productedit/:product_id', async (req, res)=>{
         res.status(400).json({"message":"Loi server"});
     }
     
-})
+});
+
+router.get('/tongdoanhthu', async (req, res) =>{
+    try{
+        const sql = `
+        SELECT SUM(oi.price * oi.soluong_sp) AS total_revenue
+        FROM orders o
+        JOIN order_items oi ON o.order_id = oi.order_id
+        WHERE o.status_id = 9;
+    `
+    const [rows] = await pool.query(sql);
+    return res.status(200).json(rows);
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({message: "Loi server"});
+    }
+});
 
 export default router;
