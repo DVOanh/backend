@@ -31,7 +31,7 @@ JOIN (
 
 router.get('/danhmuc/:iddanhmuc', async (req, res) => {
     const { iddanhmuc } = req.params;
-    const sql = 'SELECT p.product_id, p.product_name, p.image_url, d.banner_image, v.id AS variant_id, MIN(v.price) FROM products p JOIN product_variant v ON v.product_id = p.product_id JOIN categories d ON d.danhmuc_id = p.category_id WHERE v.price = (SELECT MIN(price) FROM product_variant WHERE product_id = p.product_id) and category_id = ?';
+    const sql = 'SELECT p.product_id, p.product_name, p.image_url, d.banner_image, v.id AS variant_id FROM products p JOIN product_variant v ON v.product_id = p.product_id JOIN categories d ON d.danhmuc_id = p.category_id WHERE v.price = (SELECT MIN(price) FROM product_variant WHERE product_id = p.product_id) and category_id = ?';
     const [rows] = await pool.query(sql, [iddanhmuc]);
     return res.json(rows);
 });
