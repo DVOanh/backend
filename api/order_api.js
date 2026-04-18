@@ -13,36 +13,7 @@ router.get('/', async(req, res)=>{
         const token = authHeader.split(" ")[1];
         const decoded = jwt.verify(token, "SECRE_KEY");
         const user_id = decoded.id;
-        let sql = `
-            SELECT 
-    o.order_id,
-    o.user_id,
-    o.tongtien,
-    o.created_at,
-    o.hoten,
-    o.sdt,
-    o.diachi,
-    o.ghichu,
-    o.phuongthuc_thanhtoan,
-    o.order_code,
-    o.status_id,
-    (
-        SELECT p.image_url
-        FROM order_items oi2
-        JOIN product_variant pv2 ON oi2.variant_id = pv2.id
-        JOIN products p ON p.product_id = pv2.product_id
-        WHERE oi2.order_id = o.order_id
-        LIMIT 1
-    ) AS image_url,
-
-    SUM(oi.price * oi.soluong_sp) AS tongtien,
-    COUNT(*) AS total_items
-
-FROM orders o
-JOIN order_items oi ON o.order_id = oi.order_id
-WHERE o.user_id = ?
-GROUP BY o.order_id;
-        `;
+        let sql = `select * from orders join order_items ON orders.order_id = order_items.order_id join product_variant ON order_items.variant_id = product_variant.id JOIN products ON product_variant.product_id = products.product_id where orders.user_id = ?`;
         let params = [user_id];
         if(status_id){
             sql = sql + ' AND orders.status_id = ?';
