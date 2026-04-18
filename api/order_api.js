@@ -40,7 +40,7 @@ router.get('/', async(req, res)=>{
 
 FROM orders o
 JOIN order_items oi ON o.order_id = oi.order_id
-WHERE o.user_id = 7
+WHERE o.user_id = ?
 GROUP BY o.order_id;
         `;
         let params = [user_id];
