@@ -88,7 +88,7 @@ router.get('/orders', async (req, res)=>{
             WHERE oi.order_item_id = (
             SELECT MAX(oi2.order_item_id)
             FROM order_items oi2
-            WHERE oi2.order_id = o.order_id);
+            WHERE oi2.order_id = o.order_id)
             ORDER BY order_id DESC
         `;
         const [rows] = await pool.execute(sql);
