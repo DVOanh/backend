@@ -40,6 +40,18 @@ router.post('/login', async (req, res) => {
     )
 });
 
+router.get("/tongnguoidung", async (req, res)=>{
+    try{
+        const sql = "select COUNT(*) as tongnguoidung from users";
+        const [rows] = await pool.query(sql);
+        return res.status(200).json(rows);
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({message: "Khong tim day du lieu"});
+    }
+});
+
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     const sql = 'select * from users where user_id = ?';
