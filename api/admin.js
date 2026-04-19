@@ -81,7 +81,11 @@ router.put('/productedit/:product_id', async (req, res)=>{
 router.get('/orders', async (req, res)=>{
     try{
         const sql = `
-            select * from orders o join order_items oi ON o.order_id = oi.order_id JOIN product_variant pv ON oi.variant_id = pv.id JOIN products p ON pv.product_id = p.product_id WHERE oi.order_item_id = (
+            select * from orders o join order_items oi ON o.order_id = oi.order_id 
+            JOIN product_variant pv ON oi.variant_id = pv.id 
+            JOIN products p ON pv.product_id = p.product_id 
+            JOIN order_status os ON o.status_id = os.id
+            WHERE oi.order_item_id = (
             SELECT MAX(oi2.order_item_id)
             FROM order_items oi2
             WHERE oi2.order_id = o.order_id);
