@@ -99,11 +99,12 @@ router.get("/orders", async (req, res) => {
     o.user_id,
     o.created_at, 
     os.status_name,
-  SUM(oi.price * oi.soluong_sp) as tongtien, (SELECT COUNT(*) FROM order_items) as slitem from orders o 
+  SUM(oi.price * oi.soluong_sp) as tongtien, (SELECT COUNT(*) FROM order_items oi2 WHERE oi2.order_id = o.order_id) as slitem from orders o 
   join order_items oi ON o.order_id = oi.order_id
   JOIN order_status os ON o.status_id = os.status_id
 GROUP BY o.order_id, o.order_code, o.user_id, o.created_at, o.hoten,
-    o.status_id;
+    o.status_id
+order by o.order_id desc
         `;
         const [rows] = await pool.execute(sql);
         res.json(rows);
