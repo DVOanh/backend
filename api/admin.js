@@ -141,4 +141,15 @@ router.get('/tongdonhang', async (req, res)=>{
     }
 });
 
+router.get('/tongdaban', async (req, res)=>{
+    try{
+        const sql = "SELECT SUM(sold) as tongdaban from product_variant";
+        const [tongdaban] = await pool.query(sql);
+        return res.status(200).json(tongdaban);
+    }catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Loi server" });
+    }
+});
+
 export default router;
