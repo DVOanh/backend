@@ -130,4 +130,15 @@ router.get("/tongdoanhthu", async (req, res) => {
     }
 });
 
+router.get('/tongdonhang', async (req, res)=>{
+    try{
+        const sql = "SELECT COUNT(*) AS total_orders FROM orders";
+        const [tongdonhang] = await pool.query(sql);
+        return res.status(200).json(tongdonhang);
+    }catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Loi server" });
+    }
+});
+
 export default router;
