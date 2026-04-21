@@ -7,7 +7,7 @@ router.get('/:user_id', async (req, res) => {
     const sql = "select *, products.product_name from cart join product_variant on cart.variant_id = product_variant.id join products on products.product_id = product_variant.product_id where user_id = ? order by cart_id desc";
     const [rows] = await pool.query(sql, [user_id])
     return res.json(rows);
-    });
+});
 router.get('/slgh/:user_id', async (req, res) => {
     const { user_id } = req.params;
     const sql = "select sum(quantity) as slsp from cart where user_id = ?";
@@ -29,52 +29,62 @@ router.post('/addcart', async (req, res) => {
         const [rows] = await pool.query(sql, [user_id, variant_id, soluong]);
         return res.json(rows);
     }
-    catch(err){
-        return res.status(401).json({message: err.message});
+    catch (err) {
+        return res.status(401).json({ message: err.message });
     }
 
 });
 
 router.delete('/delete', async (req, res) => {
     const authHeader = req.headers.authorization;
-    if(!authHeader){
-        return res.status(401).json({message: "Bạn chưa đăng nhập"});
+    if (!authHeader) {
+        return res.status(401).json({ message: "Bạn chưa đăng nhập" });
     }
-    try{
+    try {
         const token = authHeader.split(" ")[1];
         const decoded = jwt.verify(token, "SECRE_KEY");
         const user_id = decoded.id;
-        const {cart_id} = req.body;
+        const { cart_id } = req.body;
         const sql = "DELETE FROM cart WHERE cart_id = ? AND user_id = ?";
         const [rows] = await pool.query(sql, [cart_id, user_id]);
-        return res.status(200).json({message: "Xóa giỏ hàng thành công"});
+        return res.status(200).json({ message: "Xóa giỏ hàng thành công" });
     }
-    catch(err){
+    catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Lỗi server" });
     }
 });
 
-router.post("/product_cart_checkout", async (req, res)=>{
+router.post("/product_cart_checkout", async (req, res) => {
     const authHeader = req.headers.authorization;
-    if(!authHeader){
-        res.status(500).json({message: "Bạn chưa đăng nhập do ko tìm thấy user_id"});
+    if (!authHeader) {
+        return res.status(500).json({ message: "Bạn chưa đăng nhập do ko tìm thấy user_id" });
     }
-    try{
+    try {
         const token = authHeader.split(" ")[1];
         const decoded = jwt.verify(token, "SECRE_KEY");
         const user_id = decoded.id;
-        const {cartIds} = req.body;
+        const { cartIds } = req.body;
+        if (!cartIds || cartIds.length === 0) {
+            return res.status(400).json({ message: "Không có cart_id" });
+        }
 
         const sql = `
-            select * from cart c join product_variant pv ON c.variant_id = pv.id 
+            select 
+                c.cart_id,
+                c.quantity,
+                pv.price,
+                pv.id AS variant_id,
+                p.product_name,
+                p.image_url
+            from cart c join product_variant pv ON c.variant_id = pv.id 
             JOIN products p ON p.product_id = pv.product_id 
             where c.cart_id IN (?) and c.user_id = ?
         `
         const [product_cart_checkout] = await pool.query(sql, [cartIds, user_id]);
         return res.status(200).json(product_cart_checkout);
     }
-    catch(error){
+    catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Lỗi server" });
     }
