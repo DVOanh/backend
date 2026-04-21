@@ -55,4 +55,29 @@ router.delete('/delete', async (req, res) => {
     }
 });
 
+router.post("/product_cart_checkout", async (req, res)=>{
+    const authHeader = req.headers.authorization;
+    if(!authHeader){
+        res.status(500).json({message: "Bạn chưa đăng nhập do ko tìm thấy user_id"});
+    }
+    try{
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.verify(token, "SECRE_KEY");
+        const user_id = decoded.id;
+        const {cartIds} = req.body;
+
+        const sql = `
+            select * from cart c join product_variant pv ON c.variant_id = pv.id 
+            JOIN products p ON p.product_id = pv.product_id 
+            where c.cart_id IN (?) and c.user_id = ?
+        `
+        const [product_cart_checkout] = await pool.query(sql, [cartIds, user_id]);
+        return res.status(200).json(product_cart_checkout);
+    }
+    catch(error){
+        console.error(error);
+        return res.status(500).json({ message: "Lỗi server" });
+    }
+});
+
 export default router;

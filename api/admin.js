@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-
+import jwt from "jsonwebtoken";
 import authorizeAdmin from "../middlewares/authorizeAdmin.js";
 import authenticateToken from "../middlewares/authenticateToken.js";
 import pool from "../connect_mysql/connect.js";
@@ -151,5 +151,7 @@ router.get('/tongdaban', async (req, res)=>{
         return res.status(500).json({ message: "Loi server" });
     }
 });
+
+
 
 export default router;
