@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
     }
     const chatCompletion = await groq.chat.completions.create({
       messages: [
-        { role: "system", content: "Bạn là một trợ lý ảo tiếng Việt hữu ích." },
+        { role: "system", content: "Bạn là một trợ lý ảo tiếng Việt. Hãy trả lời thật ngắn gọn, súc tích, đi thẳng vào vấn đề. Tránh giải thích dài dòng trừ khi được yêu cầu." },
         { role: "user", content: message }
       ],
       // Model Llama 3.3 này rất thông minh và hiểu tiếng Việt cực tốt
