@@ -1,8 +1,8 @@
 import express from "express";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
 const router = express.Router();
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const groq = new Groq({apiKey: process.env.GROQ_API_KEY});
 
 router.post("/", async (req, res) => {
   try {
@@ -10,15 +10,16 @@ router.post("/", async (req, res) => {
     if (!message) {
       return res.status(400).json({ message: "Không có kí tự nào" });
     }
-    const model = genAI.getGenerativeModel({ model: "models/gemini-1.5-flash" });
-
-    const result = await model.generateContent(message);
-    const response = await result.response;
-    const text = response.text();
-    if (!text) {
-      return res.status(500).json({ error: "AI không thể tạo phản hồi cho nội dung này." });
-    }
-    res.json({ reply: text });
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        { role: "system", content: "Bạn là một trợ lý ảo tiếng Việt hữu ích." },
+        { role: "user", content: message }
+      ],
+      // Model Llama 3.3 này rất thông minh và hiểu tiếng Việt cực tốt
+      model: "llama-3.3-70b-versatile", 
+    });
+    const reply = chatCompletion.choices[0]?.message?.content || "";
+    res.json({ reply });
   } catch (error) {
     console.error("Gemini error:", error);
     res.status(500).json({ error: "Lỗi server" });
