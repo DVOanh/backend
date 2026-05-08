@@ -10,7 +10,7 @@ router.post("/", async (req, res) => {
     if (!message) {
       return res.status(400).json({ message: "Không có kí tự nào" });
     }
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "models/gemini-1.5-flash" });
 
     const result = await model.generateContent(message);
     const response = await result.response;
