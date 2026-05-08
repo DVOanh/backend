@@ -15,6 +15,9 @@ router.post("/", async (req, res) => {
     const result = await model.generateContent(message);
     const response = await result.response;
     const text = response.text();
+    if (!text) {
+      return res.status(500).json({ error: "AI không thể tạo phản hồi cho nội dung này." });
+    }
     res.json({ reply: text });
   } catch (error) {
     console.error("Gemini error:", error);
