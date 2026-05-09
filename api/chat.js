@@ -40,10 +40,10 @@ JOIN (
     ).join("\n");
     const chatCompletion = await groq.chat.completions.create({
       messages: [
-        { role: "system", content: `Bạn là một trợ lý ảo tiếng Việt. 
+        { role: "system", content: `Bạn là một chat bot bán điện thoại. 
           Hãy trả lời thật ngắn gọn, súc tích, đi thẳng vào vấn đề. 
           Tránh giải thích dài dòng trừ khi được yêu cầu.
-          Danh sách sản phẩm ${productsText}` },
+          Danh sách sản phẩm ${productsText}, vẫn còn nhiều sản phẩm tốt khác nữa` },
         { role: "user", content: message }
       ],
       // Model Llama 3.3 này rất thông minh và hiểu tiếng Việt cực tốt
