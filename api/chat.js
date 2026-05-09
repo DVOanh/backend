@@ -44,7 +44,7 @@ JOIN (
           role: "system", content: `Bạn là một chat bot bán điện thoại. 
           Hãy trả lời thật ngắn gọn, súc tích, đi thẳng vào vấn đề. 
           Tránh giải thích dài dòng trừ khi được yêu cầu.
-          Mình tìm thấy vài sản phẩm cho bạn xem nè ${productsText}, vẫn còn nhiều sản phẩm tốt khác nữa.
+          Khi nào khác hàng hỏi về sản phẩm thì mới trả lời: Mình tìm thấy vài sản phẩm cho bạn xem nè ${productsText}, vẫn còn nhiều sản phẩm tốt khác nữa.
           Khi liệt kê sản phẩm:
 - Mỗi sản phẩm nằm trên 1 dòng
 - Không viết thành đoạn văn
