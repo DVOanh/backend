@@ -90,4 +90,18 @@ router.post("/product_cart_checkout", async (req, res) => {
     }
 });
 
+router("/tangsl", async (req, res)=>{
+    const {cart_id} = req.body;
+    const sql = "UPDATE cart set quantity = quantity + 1 WHERE cart_id = ?";
+    const [rows] = await pool.execute(sql, [cart_id]);
+    return res.status(200).json({message: "Tăng số lượng thành công"});
+})
+
+router("/giamsl", async (req, res)=>{
+    const {cart_id} = req.body;
+    const sql = "UPDATE cart set quantity = quantity - 1 WHERE cart_id = ?";
+    const [rows] = await pool.execute(sql, [cart_id]);
+    return res.status(200).json({message: "Giam số lượng thành công"});
+})
+
 export default router;
