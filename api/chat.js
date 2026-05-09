@@ -3,7 +3,7 @@ import Groq from "groq-sdk";
 import pool from "../connect_mysql/connect.js";
 
 const router = express.Router();
-const groq = new Groq({apiKey: process.env.GROQ_API_KEY});
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 router.post("/", async (req, res) => {
   try {
@@ -35,19 +35,29 @@ JOIN (
 ) s ON s.product_id = p.product_id ORDER BY product_id ASC LIMIT 3
     `;
     const [rows] = await pool.query(sql);
-    const productsText = rows.map(item=>
+    const productsText = rows.map(item =>
       `${item.product_name} - ${item.price} VNĐ`
     ).join("\n");
     const chatCompletion = await groq.chat.completions.create({
       messages: [
-        { role: "system", content: `Bạn là một chat bot bán điện thoại. 
+        {
+          role: "system", content: `Bạn là một chat bot bán điện thoại. 
           Hãy trả lời thật ngắn gọn, súc tích, đi thẳng vào vấn đề. 
           Tránh giải thích dài dòng trừ khi được yêu cầu.
-          Danh sách sản phẩm ${productsText}, vẫn còn nhiều sản phẩm tốt khác nữa` },
+          Mình tìm thấy vài sản phẩm cho bạn xem nè ${productsText}, vẫn còn nhiều sản phẩm tốt khác nữa.
+          Khi liệt kê sản phẩm:
+- Mỗi sản phẩm nằm trên 1 dòng
+- Không viết thành đoạn văn
+- Format:
+Tên sản phẩm - giá
+
+Ví dụ:
+iPhone 15 - 15 triệu
+Samsung S24 - 20 triệu` },
         { role: "user", content: message }
       ],
       // Model Llama 3.3 này rất thông minh và hiểu tiếng Việt cực tốt
-      model: "llama-3.3-70b-versatile", 
+      model: "llama-3.3-70b-versatile",
     });
     const reply = chatCompletion.choices[0]?.message?.content || "";
     res.json({ reply });
