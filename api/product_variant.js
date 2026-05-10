@@ -27,7 +27,7 @@ router.get('/:product_id', async (req, res)=>{
     }
 });
 
-router.post("spsosanh", async (req, res)=>{
+router.post("/spsosanh", async (req, res)=>{
     try{
         const {variant_id} = req.body;
         const sql = "SELECT * FROM product_variant pv JOIN products p on p.product_id = pv.product_id WHERE pv.id IN (?)";
