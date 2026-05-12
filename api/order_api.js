@@ -88,7 +88,7 @@ router.put('/huydon', async (req, res)=>{
     }
 });
 
-router.get("/doanhthu7ngay", async (res) => {
+router.get("/doanhthu7ngay", async (req, res) => {
     const sql = `
         SELECT 
     DATE(created_at) as date, 
