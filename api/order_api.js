@@ -86,6 +86,21 @@ router.put('/huydon', async (req, res)=>{
     finally{
         connection.release();
     }
-})
+});
+
+router.get("/doanhthu7ngay", async (res) => {
+    const sql = `
+        SELECT 
+    DATE(created_at) as date, 
+    SUM(tongtien) as revenue
+FROM orders 
+WHERE status_id = 9
+GROUP BY date  -- Sử dụng alias 'date' đã định nghĩa ở SELECT
+ORDER BY date ASC -- Sắp xếp theo chính cột đã group
+LIMIT 7;
+    `
+    const [rows] = await pool.query(sql);
+    return res.status(200).json(rows);
+});
 
 export default router;
