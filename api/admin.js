@@ -184,6 +184,27 @@ ORDER BY
         console.log(error);
         return res.status(400).json({message: "Loi server"});
     }
-})
+});
+router.get("/sldontheotrangthai", async (req, res)=>{
+    try{
+        const sql = `
+            SELECT 
+    os.status_name, 
+    COUNT(o.order_id) AS total_orders
+FROM 
+    orders o
+  JOIN order_status os ON os.status_id = o.status_id
+GROUP BY 
+    os.status_name;
+     `
+     const [rows] = await pool.query(sql);
+     return res.status(200).json(rows);
+    }
+
+    catch(error){
+        console.log(error);
+        return res.status(400).json({message: "Loi server"});
+    }
+});
 
 export default router;
