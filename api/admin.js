@@ -152,6 +152,38 @@ router.get('/tongdaban', async (req, res)=>{
     }
 });
 
+router.get("/doanhthuthuonghieu", async (req, res)=>{
+    try{
+        const sql = `
+            SELECT 
+    b.name AS brand_name, 
+    SUM(oi.soluong_sp) AS total_quantity, 
+    SUM(oi.soluong_sp * oi.price) AS total_revenue
+FROM 
+    orders o
+JOIN 
+    order_items oi ON o.order_id = oi.order_id
+JOIN 
+    product_variant pv ON oi.variant_id = pv.id -- Giả sử order_item liên kết với biến thể
+JOIN 
+    products p ON pv.product_id = p.product_id
+JOIN 
+    brand b ON p.brand_id = b.id
+WHERE 
+    o.status_id = 9 -- Chỉ tính đơn hàng thành công
+GROUP BY 
+    b.id, b.name
+ORDER BY 
+    total_revenue DESC;
+     `
+     const [rows] = await pool.query(sql);
+     return res.status(200).json(rows);
+    }
 
+    catch(error){
+        console.log(error);
+        return res.status(400).json({message: "Loi server"});
+    }
+})
 
 export default router;
