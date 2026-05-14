@@ -226,5 +226,31 @@ router.get("/spbanchay", async (req, res) => {
     }
 });
 
+router.get("/donhangmoinhat", async (req, res) => {
+    try {
+        const sql = `
+            SELECT
+                o.hoten,
+                o.tongtien,
+                o.order_code,
+                os.status_name,
+                o.created_at
+            FROM orders o
+            JOIN order_status os on os.status_id = o.status_id
+            WHERE o.status_id = 6
+            ORDER BY order_id DESC
+            LIMIT 5;
+        `
+        const [rows] = await pool.query(sql);
+        return res.status(200).json(rows);
+    }
+
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ message: "Loi server" });
+    }
+});
+
+
 
 export default router;
