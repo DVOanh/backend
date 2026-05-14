@@ -130,30 +130,30 @@ router.get("/tongdoanhthu", async (req, res) => {
     }
 });
 
-router.get('/tongdonhang', async (req, res)=>{
-    try{
+router.get('/tongdonhang', async (req, res) => {
+    try {
         const sql = "SELECT COUNT(*) AS total_orders FROM orders";
         const [tongdonhang] = await pool.query(sql);
         return res.status(200).json(tongdonhang);
-    }catch (error) {
+    } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Loi server" });
     }
 });
 
-router.get('/tongdaban', async (req, res)=>{
-    try{
+router.get('/tongdaban', async (req, res) => {
+    try {
         const sql = "SELECT SUM(sold) as tongdaban from product_variant";
         const [tongdaban] = await pool.query(sql);
         return res.status(200).json(tongdaban);
-    }catch (error) {
+    } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Loi server" });
     }
 });
 
-router.get("/doanhthuthuonghieu", async (req, res)=>{
-    try{
+router.get("/doanhthuthuonghieu", async (req, res) => {
+    try {
         const sql = `
             SELECT 
     b.name AS brand_name, 
@@ -176,17 +176,17 @@ GROUP BY
 ORDER BY 
     total_revenue DESC;
      `
-     const [rows] = await pool.query(sql);
-     return res.status(200).json(rows);
+        const [rows] = await pool.query(sql);
+        return res.status(200).json(rows);
     }
 
-    catch(error){
+    catch (error) {
         console.log(error);
-        return res.status(400).json({message: "Loi server"});
+        return res.status(400).json({ message: "Loi server" });
     }
 });
-router.get("/sldontheotrangthai", async (req, res)=>{
-    try{
+router.get("/sldontheotrangthai", async (req, res) => {
+    try {
         const sql = `
             SELECT 
     os.status_name, 
@@ -197,14 +197,34 @@ FROM
 GROUP BY 
     os.status_name;
      `
-     const [rows] = await pool.query(sql);
-     return res.status(200).json(rows);
+        const [rows] = await pool.query(sql);
+        return res.status(200).json(rows);
     }
 
-    catch(error){
+    catch (error) {
         console.log(error);
-        return res.status(400).json({message: "Loi server"});
+        return res.status(400).json({ message: "Loi server" });
     }
 });
+
+router.get("/spbanchay", async (req, res) => {
+    try {
+        const sql = `
+            select SUM(pv.sold) AS total_sold, p.product_name from product_variant pv JOIN products p 
+            ON pv.product_id = p.product_id
+            GROUP BY p.product_id, p.product_name
+            ORDER BY total_sold DESC
+            LIMIT 5;
+        `
+        const [rows] = await pool.query(sql);
+        return res.status(200).json(rows);
+    }
+
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ message: "Loi server" });
+    }
+});
+
 
 export default router;
