@@ -210,11 +210,7 @@ GROUP BY
 router.get("/spbanchay", async (req, res) => {
     try {
         const sql = `
-            select SUM(pv.sold) AS total_sold, p.product_name from product_variant pv JOIN products p 
-            ON pv.product_id = p.product_id
-            GROUP BY p.product_id, p.product_name
-            ORDER BY total_sold DESC
-            LIMIT 5;
+            select sldaban, product_name from products p ORDER BY sldaban DESC LIMIT 5;
         `
         const [rows] = await pool.query(sql);
         return res.status(200).json(rows);
