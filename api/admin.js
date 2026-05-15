@@ -143,7 +143,7 @@ router.get('/tongdonhang', async (req, res) => {
 
 router.get('/tongdaban', async (req, res) => {
     try {
-        const sql = "SELECT SUM(sold) as tongdaban from product_variant";
+        const sql = "SELECT sldaban from products";
         const [tongdaban] = await pool.query(sql);
         return res.status(200).json(tongdaban);
     } catch (error) {
