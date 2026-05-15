@@ -3,19 +3,19 @@ import express from 'express';
 const router = express.Router();
 import jwt from 'jsonwebtoken';
 
-router.get('/', async(req, res)=>{
-    const {status_id} = req.query;
+router.get('/', async (req, res) => {
+    const { status_id } = req.query;
     const authHeader = req.headers.authorization;
-    if(!authHeader){
-        return res.status(401).json({message: 'Chua dang nhap'});
+    if (!authHeader) {
+        return res.status(401).json({ message: 'Chua dang nhap' });
     }
-    try{
+    try {
         const token = authHeader.split(" ")[1];
         const decoded = jwt.verify(token, "SECRE_KEY");
         const user_id = decoded.id;
         let sql = `select * from orders join order_items ON orders.order_id = order_items.order_id join product_variant ON order_items.variant_id = product_variant.id JOIN products ON product_variant.product_id = products.product_id where orders.user_id = ?`;
         let params = [user_id];
-        if(status_id){
+        if (status_id) {
             sql = sql + ' AND orders.status_id = ?';
             params.push(status_id);
         }
@@ -23,7 +23,7 @@ router.get('/', async(req, res)=>{
         const [rows] = await pool.query(sql, params);
         return res.json(rows);
     }
-    catch(error){
+    catch (error) {
         console.log(error.message);
         return res.status(401).json({ message: "Token khong hop le" });
     }
@@ -39,7 +39,7 @@ router.post('/checkout', async (req, res) => {
             [user_id, total, hoten, phone, address, ghichu, pttt, orderCode]
         );
         const order_id = order.insertId;
-    
+
         await connection.query('INSERT INTO order_items(order_id, soluong_sp, price, variant_id) values (?, ?, ?, ?)',
             [order_id, quantity, price, variant_id]
         );
@@ -49,41 +49,41 @@ router.post('/checkout', async (req, res) => {
         );
 
         await connection.commit();
-        res.status(200).json({message: 'Dat hang thanh cong'});
+        res.status(200).json({ message: 'Dat hang thanh cong' });
     }
-    catch(error){
+    catch (error) {
         await connection.rollback();
         res.status(500).json({ message: "Lỗi đặt hàng", error: error.message });
     }
-    finally{
+    finally {
         connection.release();
     }
 });
 
-router.put('/huydon', async (req, res)=>{
+router.put('/huydon', async (req, res) => {
     const connection = await pool.getConnection();
     const authHeader = req.headers.authorization;
-    if(!authHeader){
-        return res.status(400).json({message: "Chua dang nhap"});
+    if (!authHeader) {
+        return res.status(400).json({ message: "Chua dang nhap" });
     }
-    try{
+    try {
         const token = authHeader.split(" ")[1];
         const decoded = jwt.verify(token, 'SECRE_KEY');
         const user_id = decoded.id;
         await connection.beginTransaction();
-        const {order_item_id, order_id, soluong_sp, variant_id} = req.body;
+        const { order_item_id, order_id, soluong_sp, variant_id } = req.body;
         const sqlhuydon = "UPDATE orders o join order_items oi ON o.order_id = oi.order_id set o.status_id = 10 WHERE user_id = ? and oi.order_id = ? and order_item_id = ?";
         const sqlsuaslkho = "UPDATE product_variant set stock = stock + ? WHERE id = ?"
         await connection.query(sqlhuydon, [user_id, order_id, order_item_id]);
         await connection.query(sqlsuaslkho, [soluong_sp, variant_id])
         await connection.commit();
-        res.status(200).json({message: "Huỷ đơn thành công"});
+        res.status(200).json({ message: "Huỷ đơn thành công" });
     }
-    catch(error){
+    catch (error) {
         await connection.rollback();
-        res.status(500).json({message: "Lối hủy đơn"});
+        res.status(500).json({ message: "Lối hủy đơn" });
     }
-    finally{
+    finally {
         connection.release();
     }
 });
@@ -104,12 +104,58 @@ LIMIT 7;
 });
 
 router.get("/:order_id", async (req, res) => {
-    const {order_id} = req.params;
+    const { order_id } = req.params;
     const sql = `
         select * from orders where order_id = ?
     `
     const [rows] = await pool.query(sql, [order_id]);
     return res.status(200).json(rows);
 });
+
+router.put("/update/:order_id", async (req, res) => {
+    const connect = await pool.getConnection();
+    try {
+        await connect.beginTransaction();
+        const { order_id } = req.params;
+        const { status_id } = req.body;
+        if (status_id === 9) {
+            // 1. update status đơn hàng
+            await connect.query(
+                `UPDATE orders SET status_id = 9 WHERE order_id = ?`,
+                [order_id]
+            );
+
+            // 2. lấy sản phẩm trong đơn
+            const [items] = await connect.query(
+                `SELECT variant_id, soluong_sp FROM order_items WHERE order_id = ?`,
+                [order_id]
+            );
+
+            // 3. cộng số lượng bán
+            for (const item of items) {
+                await connect.query(
+                    `UPDATE product_variants
+                    SET sldaban = sldaban + ?
+                    WHERE variant_id = ?`,
+                    [item.quantity, item.variant_id]
+                );
+            }
+
+            // commit nếu tất cả OK
+            await conn.commit();
+
+            res.json({ message: "Hoàn thành đơn hàng" });
+        }
+        else {
+
+        }
+    }
+    catch (error) {
+        await connect.rollback();
+        res.status(500).json({ error: error.message });
+    }finally {
+        connect.release();
+    }
+})
 
 export default router;
