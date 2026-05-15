@@ -134,9 +134,10 @@ router.put("/update_order_admin/:order_id", async (req, res) => {
             // 3. cộng số lượng bán
             for (const item of items) {
                 await connect.query(
-                    `UPDATE product_variants
-                    SET sldaban = sldaban + ?
-                    WHERE variant_id = ?`,
+                    `UPDATE products p
+                    JOIN product_variant pv ON p.product_id = pv.product_id
+                    SET p.sldaban = p.sldaban + ?
+                    WHERE pv.id = ?`,
                     [item.soluong_sp, item.variant_id]
                 );
             }
