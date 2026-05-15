@@ -112,7 +112,7 @@ router.get("/:order_id", async (req, res) => {
     return res.status(200).json(rows);
 });
 
-router.put("/update/:order_id", async (req, res) => {
+router.put("/update_order_admin/:order_id", async (req, res) => {
     const connect = await pool.getConnection();
     try {
         await connect.beginTransaction();
