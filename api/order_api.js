@@ -103,4 +103,13 @@ LIMIT 7;
     return res.status(200).json(rows);
 });
 
+router.get("/:order_id", async (req, res) => {
+    const {order_id} = req.params;
+    const sql = `
+        select * from orders where order_id = ?
+    `
+    const [rows] = await pool.query(sql, [order_id]);
+    return res.status(200).json(rows);
+});
+
 export default router;
