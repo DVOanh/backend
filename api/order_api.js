@@ -117,7 +117,7 @@ router.put("/update/:order_id", async (req, res) => {
     try {
         await connect.beginTransaction();
         const { order_id } = req.params;
-        const { status_id } = req.body;
+        const status_id = Number(req.body.status_id);
         if (status_id === 9) {
             // 1. update status đơn hàng
             await connect.query(
@@ -137,18 +137,19 @@ router.put("/update/:order_id", async (req, res) => {
                     `UPDATE product_variants
                     SET sldaban = sldaban + ?
                     WHERE variant_id = ?`,
-                    [item.quantity, item.variant_id]
+                    [item.soluong_sp, item.variant_id]
                 );
             }
-
-            // commit nếu tất cả OK
-            await conn.commit();
-
-            res.json({ message: "Hoàn thành đơn hàng" });
         }
         else {
-
+            await connect.query(
+                `UPDATE orders SET status_id = ? WHERE order_id = ?`,
+                [status_id, order_id]
+            );
         }
+        // commit nếu tất cả OK
+            await connect.commit();
+            res.json({ message: "Cap nhat don hang thanh cong" });
     }
     catch (error) {
         await connect.rollback();
@@ -156,6 +157,6 @@ router.put("/update/:order_id", async (req, res) => {
     }finally {
         connect.release();
     }
-})
+});
 
 export default router;
