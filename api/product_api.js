@@ -99,7 +99,8 @@ router.get('/:id', async (req, res) => {
     const id = req.params.id;
     const sql = `SELECT p.*, 
        v.id, 
-       v.price
+       v.price,
+       v.stock
 FROM products p
 JOIN product_variant v 
   ON v.product_id = p.product_id
