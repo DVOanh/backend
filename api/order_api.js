@@ -177,7 +177,7 @@ router.get("/order_item/:order_id", async (req, res)=>{
         JOIN products p ON pv.product_id = p.product_id
         WHERE oi.order_id = ?
     `
-    const [order_items] = await pool(sql, [order_id]);
+    const [order_items] = await pool.query(sql, [order_id]);
     return res.status(200).json(order_items);
 })
 
