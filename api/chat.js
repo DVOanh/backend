@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
   p.image_url,
   v.id AS variant_id,
   v.price,
-  s.total_sold
+  p.sldaban
 FROM products p
 JOIN (
     SELECT product_id, MIN(price) AS min_price
@@ -28,11 +28,7 @@ JOIN (
 JOIN product_variant v 
   ON v.product_id = p.product_id 
   AND v.price = min_v.min_price
-JOIN (
-    SELECT product_id, SUM(sold) AS total_sold
-    FROM product_variant
-    GROUP BY product_id
-) s ON s.product_id = p.product_id ORDER BY product_id ASC LIMIT 3
+ ORDER BY product_id ASC LIMIT 3
     `;
     const [rows] = await pool.query(sql);
     const productsText = rows.map(item =>
