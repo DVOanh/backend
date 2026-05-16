@@ -53,7 +53,7 @@ router.get("/tongnguoidung", async (req, res)=>{
     }
 });
 
-router.get('/:id',authenticateToken, async (req, res) => {
+router.get('/byid',authenticateToken, async (req, res) => {
     const user_id = req.user.user_id;
     const sql = 'select * from users where user_id = ?';
     const [rows] = await pool.query(sql, [user_id]);
