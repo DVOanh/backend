@@ -2,6 +2,7 @@ import pool from '../connect_mysql/connect.js';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import authenticateToken from "../middlewares/authenticateToken.js";
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
@@ -52,10 +53,10 @@ router.get("/tongnguoidung", async (req, res)=>{
     }
 });
 
-router.get('/:id', async (req, res) => {
-    const { id } = req.params;
+router.get('/:id',authenticateToken, async (req, res) => {
+    const user_id = req.user.user_id;
     const sql = 'select * from users where user_id = ?';
-    const [rows] = await pool.query(sql, [id]);
+    const [rows] = await pool.query(sql, [user_id]);
     return res.json(rows[0]);
 });
 
