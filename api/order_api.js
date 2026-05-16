@@ -160,4 +160,25 @@ router.put("/update_order_admin/:order_id", async (req, res) => {
     }
 });
 
+router.get("/order_item/:order_id", async (req, res)=>{
+    const {order_id} = req.params;
+    const sql = `
+        SELECT 
+        oi.order_item_id,
+        oi.order_id,
+        oi.soluong_sp,
+        pv.id AS variant_id,
+        pv.price,
+        p.product_id,
+        p.product_name,
+        p.image_url
+        FROM order_items oi
+        JOIN product_variant pv ON oi.variant_id = pv.id
+        JOIN products p ON pv.product_id = p.product_id
+        WHERE oi.order_id = ?
+    `
+    const [order_items] = await pool(sql, [order_id]);
+    return res.status(200).json(order_items);
+})
+
 export default router;
